@@ -18,7 +18,7 @@ repos:
       - id: absolufy-imports
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.32.1
+    rev: v2.33.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -109,7 +109,7 @@ repos:
         additional_dependencies: [flake8-docstrings, darglint==1.8.0]
 
   - repo: https://github.com/myint/rstcheck
-    rev: "v5.0.0"
+    rev: "v6.0.0.post1"
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
