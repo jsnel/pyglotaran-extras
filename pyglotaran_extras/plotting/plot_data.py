@@ -38,6 +38,7 @@ def plot_data_overview(
     nr_of_data_svd_vectors: int = 4,
     show_data_svd_legend: bool = True,
     irf_location: float | None = None,
+    cmap: str = "PuRd",
 ) -> tuple[Figure, Axes] | tuple[Figure, Axis]:
     """Plot data as filled contour plot and SVD components.
 
@@ -61,6 +62,8 @@ def plot_data_overview(
     irf_location : float | None
         Location of the ``irf`` by which the time axis will get shifted. If it is None the time
         axis will not be shifted. Defaults to None.
+    cmap : str
+        Colormap to use for the filled contour plot. Defaults to "PuRd".
 
     Returns
     -------
@@ -88,7 +91,7 @@ def plot_data_overview(
     rsv_ax = cast(Axis, plt.subplot2grid((4, 3), (3, 2), fig=fig))
 
     if len(data.time) > 1:
-        data.plot(x="time", ax=data_ax, center=False)
+        data.plot(x="time", ax=data_ax, center=False, cmap=cmap)
     else:
         data.plot(ax=data_ax)
 
@@ -102,8 +105,16 @@ def plot_data_overview(
         linthresh=linthresh,
         irf_location=irf_location,
     )
-    plot_sv_data(dataset, sv_ax)
+    plot_sv_data(dataset, sv_ax, range(20))
     plot_rsv_data(dataset, rsv_ax, indices=range(nr_of_data_svd_vectors), show_legend=False)
+    sv_ax.set_ylabel("")
+    lsv_ax.set_ylabel("")
+    rsv_ax.set_ylabel("")
+    lsv_ax.set_xlabel("Time (ps)")
+    rsv_ax.set_xlabel("Wavelength (nm)")
+    data_ax.set_xlabel("Time (ps)")
+    data_ax.set_ylabel("Wavelength (nm)")
+
     if show_data_svd_legend is True:
         rsv_ax.legend(title="singular value index", loc="lower right", bbox_to_anchor=(1.13, 1))
     fig.suptitle(title, fontsize=16)

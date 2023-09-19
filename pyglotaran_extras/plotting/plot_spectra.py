@@ -35,9 +35,9 @@ def plot_spectra(
         Whether or not to add a horizontal line at zero. Defaults to True.
     """
     plot_sas(res, axes[0, 0], cycler=cycler, show_zero_line=show_zero_line)
-    plot_das(res, axes[0, 1], cycler=cycler, show_zero_line=show_zero_line)
+    plot_das(res, axes[0, 1], cycler=PlotStyle().cycler, show_zero_line=show_zero_line)
     plot_norm_sas(res, axes[1, 0], cycler=cycler, show_zero_line=show_zero_line)
-    plot_norm_das(res, axes[1, 1], cycler=cycler, show_zero_line=show_zero_line)
+    plot_norm_das(res, axes[1, 1], cycler=PlotStyle().cycler, show_zero_line=show_zero_line)
 
 
 def plot_sas(
