@@ -359,3 +359,64 @@ def _plot_svd_vectors(
         value.plot.line(x=x_dim, ax=ax, zorder=zorder, label=label)
     if show_legend is True:
         ax.legend(title=sv_index_dim)
+
+
+# Does not conform to the style guide, so commited with pre-commit hook disabled.
+def plot_svd_of_residual(
+    result_dataset,
+    result_dataset2,
+    result_dataset3,
+    linlog,
+    linthresh,
+    loc1,
+    loc2,
+    loc3,
+    colors=["tab:grey", "tab:orange", cc.cyan],
+):
+    fig, axes = plt.subplots(1, 2, figsize=(10, 2))
+    custom_cycler = cycler(color=[colors[0]])
+    plot_lsv_residual(
+        result_dataset,
+        axes[0],
+        indices=[0],
+        linlog=linlog,
+        linthresh=linthresh,
+        cycler=custom_cycler,
+        irf_location=loc1,
+    )
+    custom_cycler = cycler(color=[colors[1]])
+    plot_lsv_residual(
+        result_dataset2,
+        axes[0],
+        indices=[0],
+        linlog=linlog,
+        linthresh=linthresh,
+        cycler=custom_cycler,
+        irf_location=loc2,
+    )
+    custom_cycler = cycler(color=[colors[2]])
+    plot_lsv_residual(
+        result_dataset3,
+        axes[0],
+        indices=[0],
+        linlog=linlog,
+        linthresh=linthresh,
+        cycler=custom_cycler,
+        irf_location=loc3,
+    )
+    axes[0].set_xlabel("Time (ps)")
+    axes[0].get_legend().remove()
+    axes[0].set_ylabel("")
+    axes[0].set_title("residual 1st LSV")
+    custom_cycler = cycler(color=[colors[0]])
+    plot_rsv_residual(result_dataset, axes[1], indices=[0], cycler=custom_cycler)
+    custom_cycler = cycler(color=[colors[1]])
+    plot_rsv_residual(result_dataset2, axes[1], indices=[0], cycler=custom_cycler)
+    custom_cycler = cycler(color=[colors[2]])
+    plot_rsv_residual(result_dataset3, axes[1], indices=[0], cycler=custom_cycler)
+    axes[1].set_xlabel("Wavelength (nm)")
+    axes[1].set_title("residual 1st RSV")
+    axes[1].get_legend().remove()
+    axes[1].set_ylabel("")
+
+    return fig, axes
