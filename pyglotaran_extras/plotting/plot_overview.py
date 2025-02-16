@@ -23,13 +23,14 @@ from pyglotaran_extras.plotting.plot_svd import plot_svd
 from pyglotaran_extras.plotting.style import PlotStyle
 from pyglotaran_extras.plotting.utils import add_cycler_if_not_none
 from pyglotaran_extras.plotting.utils import extract_irf_location
-from pyglotaran_extras.types import Unset
+from pyglotaran_extras.types import OptimizationResult, Unset
+from pyglotaran_extras.types import Result
 
 if TYPE_CHECKING:
     from cycler import Cycler
-    from glotaran.project.result import Result
     from matplotlib.figure import Figure
     from matplotlib.pyplot import Axes
+
 
     from pyglotaran_extras.types import DatasetConvertible
     from pyglotaran_extras.types import UnsetType
@@ -37,7 +38,7 @@ if TYPE_CHECKING:
 
 @use_plot_config(exclude_from_config=("cycler", "das_cycler", "svd_cycler"))
 def plot_overview(
-    result: DatasetConvertible | Result,
+    result: Result | OptimizationResult,
     center_λ: float | None = None,
     linlog: bool = True,
     linthresh: float = 1,
@@ -117,26 +118,30 @@ def plot_overview(
     -------
     tuple[Figure, Axes]
     """
-    res = load_data(result, _stacklevel=3)
 
     if das_cycler is Unset:
         das_cycler = cycler
     if svd_cycler is Unset:
         svd_cycler = cycler
 
-    if res.coords["time"].to_numpy().size == 1:
-        fig, axes = plot_guidance(res)
-        if figure_only is not None:
-            warn(PyglotaranExtrasApiDeprecationWarning(FIG_ONLY_WARNING), stacklevel=2)
-        return fig, axes
+    if isinstance(result, Result):
+        # look for first dataset
+        res = next(iter(result.optimization_results.values()))
+    elif isinstance(result, OptimizationResult):
+        print("Result")
+        res = result
+    else:
+        raise ValueError("result must be a Result or OptimizationResult object")
+    assert isinstance(res, OptimizationResult)
+
+
     fig, axes = plt.subplots(4, 3, figsize=figsize, constrained_layout=True)
-
-    irf_location = extract_irf_location(res, center_λ, main_irf_nr)
-
-    if center_λ is None:  # center wavelength (λ in nm)
-        center_λ = min(res.sizes["spectral"], round(res.sizes["spectral"] / 2))
+    # irf_location = extract_irf_location(res, center_λ, main_irf_nr)
+    # if center_λ is None:  # center wavelength (λ in nm)
+    #    center_λ = min(res.sizes["spectral"], round(res.sizes["spectral"] / 2))
 
     # First and second row: concentrations - SAS/EAS - DAS
+
     plot_concentrations(
         res,
         axes[0, 0],

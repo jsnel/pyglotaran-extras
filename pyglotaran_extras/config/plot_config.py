@@ -557,3 +557,7 @@ def plot_config_context(plot_config: PerFunctionPlotConfig) -> Generator[Config,
     )
     yield CONFIG
     delattr(CONFIG.plotting, "__context_config")
+
+
+class ElementDataExtractionMapping(BaseModel):
+    support_plot_concentrations: bool = False

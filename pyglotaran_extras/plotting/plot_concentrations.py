@@ -9,6 +9,7 @@ from pyglotaran_extras.plotting.style import PlotStyle
 from pyglotaran_extras.plotting.utils import MinorSymLogLocator
 from pyglotaran_extras.plotting.utils import add_cycler_if_not_none
 from pyglotaran_extras.plotting.utils import get_shifted_traces
+from pyglotaran_extras.types import OptimizationResult
 
 if TYPE_CHECKING:
     import xarray as xr
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 
 @use_plot_config(exclude_from_config=("cycler",))
 def plot_concentrations(
-    res: xr.Dataset,
+    res: OptimizationResult | xr.Dataset,
     ax: Axis,
     center_λ: float | None,
     linlog: bool = False,
@@ -26,6 +27,7 @@ def plot_concentrations(
     linscale: float = 1,
     main_irf_nr: int = 0,
     cycler: Cycler | None = PlotStyle().cycler,
+    # element_uid: "glotaran.element.kinetic",
     title: str = "Concentrations",
 ) -> None:
     """Plot traces on the given axis ``ax``.

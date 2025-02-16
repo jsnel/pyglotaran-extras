@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 from typing import Any
 from typing import Literal
 from typing import ParamSpec
@@ -79,3 +79,21 @@ Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 SupportsModelDump = TypeVar("SupportsModelDump", bound=(BaseModel | RootModel[Any]))
+
+
+@runtime_checkable
+class OptimizationResult(Protocol):
+    elements: dict[str, xr.Dataset]
+    activations: dict[str, xr.Dataset]
+    input_data: xr.DataArray | xr.Dataset | None = None
+    residuals: xr.DataArray | xr.Dataset | None = None
+    fitted_data: xr.Dataset | xr.DataArray
+
+
+@runtime_checkable
+class Result(Protocol):
+    optimization_results: dict[str, OptimizationResult]
+    # experiments: dict[str, ExperimentModel]
+    # optimization_info: OptimizationInfo
+    # initial_parameters: Parameters
+    # optimized_parameters: Parameters
